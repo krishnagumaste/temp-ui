@@ -39,7 +39,6 @@ export const useAuth = () => {
     };
 
     getSessions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { isAuthenticated, isLoading };
