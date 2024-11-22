@@ -5,6 +5,7 @@ status bar here
 3. Upload progess should also be there
 */
 import React, { useState } from "react";
+import FileList  from "./FileList"
 
 interface File {
   name: string;
@@ -84,39 +85,18 @@ const PdfUpload: React.FC = () => {
       </label>
 
       <p className="text-center mt-2 text-gray-500 text-sm">
-        Click or drag files to this area to upload
+        Click, drag, or drop files here to upload
       </p>
 
       {/* Error Message */}
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
-      {/* Uploaded Files Section */}
-      <div className="mt-5">
-        {files.map((file, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center mb-5" // Removed 'pb-2 border-b border-gray-200'
-          >
-            <div className="flex-1">
-              <span className="text-base">{file.name}</span>
-            </div>
-            <div className="flex gap-2">
-              <button
-                className="text-sm px-3 py-1 bg-transparent border border-gray-300 rounded transition-colors duration-300 hover:border-red-500 hover:text-red-500"
-                onClick={() => handleCancel(index)}
-              >
-                Cancel
-              </button>
-              <button
-                className="text-sm px-3 py-1 bg-transparent border border-gray-300 rounded transition-colors duration-300 hover:border-green-500 hover:text-green-500"
-                onClick={() => handleUpload(index)}
-              >
-                Upload
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* File List */}
+      <FileList
+        files={files}
+        onUpload={handleUpload}
+        onCancel={handleCancel}
+      />
     </div>
   );
 };
