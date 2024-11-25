@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Button, Pagination, Card, Space, Upload, message } from 'antd';
+import { Input, Button, Pagination, Card, Space } from 'antd';
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
-// import { Worker, Viewer } from '@react-pdf-viewer/core';
-// import '@react-pdf-viewer/core/lib/styles/index.css';
-// import { FieldNamesType } from 'antd/es/cascader';
-// import { pdfjs } from 'react-pdf';
+import { useNavigate } from 'react-router-dom';
 
 interface PDFItem {
   id: string;
@@ -21,6 +18,7 @@ const SearchPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pdfItems] = useState<PDFItem[]>(generateDummyData(30));
   const itemsPerPage = 9;
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -40,38 +38,25 @@ const SearchPage: React.FC = () => {
   const endIndex = startIndex + itemsPerPage;
   const displayedItems = filteredPdfItems.slice(startIndex, endIndex);
 
-  // const totalPages = Math.ceil(filteredPdfItems.length / itemsPerPage);
-
-  // Function to handle the View PDF
   const handleViewClick = (pdfName: string) => {
     alert(`You are viewing the PDF: ${pdfName}`);
   };
 
-  // Upload handle function
-  const handleUpload = (file: File) => {
-    // Only allow PDF files
-    const isPDF = file.type === 'application/pdf';
-    if (!isPDF) {
-      message.error('You can only upload PDF files!');
-      return false;
-    }
-    message.success(`${file.name} file uploaded successfully`);
-    return false;
+  const handleUploadClick = () => {
+    navigate('/pdfUpload'); // Navigate to the /pdfUpload route
   };
 
   return (
     <div className='flex justify-center items-start p-4 min-h-screen bg-gray-50 relative overflow-hidden'>
       <div className='w-full max-w-4xl flex flex-col h-full'>
         <div className='absolute top-4 right-4 z-10'>
-          <Upload
-            beforeUpload={handleUpload} // Handle file before upload
-            showUploadList={false} // Disable default upload list
-            accept='.pdf' // Only allow PDF files
+          <Button
+            icon={<UploadOutlined />}
+            type='primary'
+            onClick={handleUploadClick} // Navigate on click
           >
-            <Button icon={<UploadOutlined />} type='primary'>
-              Upload PDF
-            </Button>
-          </Upload>
+            Upload PDF
+          </Button>
         </div>
 
         {/* Header Section */}
