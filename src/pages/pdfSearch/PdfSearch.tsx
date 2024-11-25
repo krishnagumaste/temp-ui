@@ -41,7 +41,7 @@ const SearchPage: React.FC = () => {
 
   const totalPages = Math.ceil(filteredPdfItems.length / itemsPerPage);
 
-  // Function to handle the "View PDF" button click
+  // Function to handle the View PDF
   const handleViewClick = (pdfName: string) => {
     alert(`You are viewing the PDF: ${pdfName}`);
   };
@@ -55,13 +55,13 @@ const SearchPage: React.FC = () => {
       return false;
     }
     message.success(`${file.name} file uploaded successfully`);
-    return false; // Prevent automatic upload
+    return false; 
   };
 
   return (
     <div className="flex justify-center items-start p-4 min-h-screen bg-gray-50 relative overflow-hidden">
       <div className="w-full max-w-4xl flex flex-col h-full">
-        {/* Upload Button Section (Positioned above the Search Bar) */}
+        
         <div className="absolute top-4 right-4 z-10">
           <Upload
             beforeUpload={handleUpload} // Handle file before upload
@@ -77,18 +77,18 @@ const SearchPage: React.FC = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-2 mt-6">
           <div className="relative w-full md:w-3/4 lg:w-4/5 mb-2 md:mb-0">
-            {/* Search Input */}
+            
             <Search
-              placeholder="Enter the keyword to search" // Updated placeholder text
+              placeholder="Enter the keyword to search" 
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
-              onSearch={handleSearch} // Trigger search on Enter key
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              onSearch={handleSearch} 
               enterButton={<SearchOutlined />}
               className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             />
           </div>
 
-          {/* Toggle Buttons */}
+         
           <Space size={20} className="mt-2 md:mt-0">
             <Button
               onClick={handleSearchTypeToggle}
@@ -136,7 +136,7 @@ const SearchPage: React.FC = () => {
   );
 };
 
-// Function to generate dummy data
+
 function generateDummyData(numItems: number): PDFItem[] {
   return Array.from({ length: numItems }, (_, i) => ({
     id: `pdf-item-${i + 1}`,
