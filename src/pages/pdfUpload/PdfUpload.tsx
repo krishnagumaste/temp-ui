@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import axios from 'axios';
 
 interface FileUpload {
   file: File;
@@ -9,6 +11,7 @@ interface FileUpload {
 const PdfUpload: React.FC = () => {
   const [files, setFiles] = useState<FileUpload[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate(); // Initialize navigate function
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -39,26 +42,36 @@ const PdfUpload: React.FC = () => {
     setFiles(prev => [...prev, ...newFiles]);
   };
 
-  const uploadFile = (index: number) => {
+  const uploadFile = async (index: number) => {
     const fileToUpload = files[index];
     const url = 'YOUR_BACKEND_ENDPOINT'; // Replace with your backend endpoint
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
+    // Update the status to "Uploading"
+    setFiles(prev =>
+      prev.map((f, i) =>
+        i === index ? { ...f, status: 'Uploading', progress: 0 } : f
+      )
+    );
 
-    xhr.upload.onprogress = event => {
-      if (event.lengthComputable) {
-        const progress = (event.loaded / event.total) * 100;
-        setFiles(prev =>
-          prev.map((f, i) =>
-            i === index ? { ...f, progress, status: 'Uploading' } : f
-          )
-        );
-      }
-    };
+    const formData = new FormData();
+    formData.append('file', fileToUpload.file);
 
-    xhr.onload = () => {
-      if (xhr.status === 200) {
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: progressEvent => {
+          if (progressEvent.total) {
+            const progress = (progressEvent.loaded / progressEvent.total) * 100;
+            setFiles(prev =>
+              prev.map((f, i) => (i === index ? { ...f, progress } : f))
+            );
+          }
+        },
+      });
+
+      if (response.status === 200) {
         setFiles(prev =>
           prev.map((f, i) => (i === index ? { ...f, status: 'Completed' } : f))
         );
@@ -67,17 +80,12 @@ const PdfUpload: React.FC = () => {
           prev.map((f, i) => (i === index ? { ...f, status: 'Failed' } : f))
         );
       }
-    };
-
-    xhr.onerror = () => {
+    } catch (error) {
       setFiles(prev =>
         prev.map((f, i) => (i === index ? { ...f, status: 'Error' } : f))
       );
-    };
-
-    const formData = new FormData();
-    formData.append('file', fileToUpload.file);
-    xhr.send(formData);
+      console.error('Error uploading file', error);
+    }
   };
 
   const uploadAllFiles = () => {
@@ -102,6 +110,16 @@ const PdfUpload: React.FC = () => {
     <div className='w-full max-w-3xl mx-auto p-4'>
       {/* Heading */}
       <h1 className='text-2xl font-bold text-center mb-6'>Upload PDF</h1>
+
+      {/* Button to navigate to /pdfSearch */}
+      <div className='absolute top-4 right-4'>
+        <button
+          onClick={() => navigate('/pdfSearch')} // Navigate to /pdfSearch
+          className='px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'
+        >
+          Go to PDF Search
+        </button>
+      </div>
 
       {/* Drag-and-Drop Area */}
       <div
