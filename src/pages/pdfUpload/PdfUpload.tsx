@@ -156,15 +156,15 @@ const PdfUpload: React.FC = () => {
   };
 
   return (
-    <div className='w-full max-w-3xl mx-auto p-4'>
+    <div className='w-full max-w-3xl mx-auto p-4 '>
       <h1 className='text-2xl font-bold text-center mb-6'>Upload PDF</h1>
 
-      <div className='absolute top-4 right-4'>
+      <div className='absolute top-4 right-4 mt-10 '>
         <button
           onClick={() => navigate('/pdfSearch')}
-          className='px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'
+          className='px-6 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-500'
         >
-          Go to PDF Search
+          PDF Search
         </button>
       </div>
 
