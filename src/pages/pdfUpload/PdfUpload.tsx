@@ -80,8 +80,6 @@ const PdfUpload: React.FC = () => {
         const end = Math.min(partNumber * partSize, fileSize);
         const filePart = fileToUpload.file.slice(start, end);
 
-        console.log(presignedUrls[partNumber - 1]);
-
         const uploadResponse = await axios.put(
           presignedUrls[partNumber - 1],
           filePart,
@@ -122,6 +120,9 @@ const PdfUpload: React.FC = () => {
         }
       );
 
+      // Notify S3 upload complete and make an HTTP POST request
+      await notifyUploadCompletion(fileToUpload.file.name);
+
       setFiles(prev =>
         prev.map((f, i) =>
           i === index ? { ...f, status: 'Completed', progress: 100 } : f
@@ -134,6 +135,24 @@ const PdfUpload: React.FC = () => {
           i === index ? { ...f, status: 'Failed', progress: 0 } : f
         )
       );
+    }
+  };
+
+  // Notify API when upload is complete
+  const notifyUploadCompletion = async (fileName: string) => {
+    try {
+      const response = await axios.post(
+        'http://0.0.0.0:9090/v1/search-pdf-service/file-upload-complete',
+        {
+          fileName,
+        }
+      );
+      console.log(`Upload completion notified for file: ${fileName}`);
+      if (response) {
+        console.log(response);
+      }
+    } catch (error) {
+      console.error('Failed to notify upload completion:', error);
     }
   };
 

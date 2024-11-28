@@ -7,6 +7,7 @@ import 'hero-shad/dist.style.css';
 import Layout from '../layout/Layout';
 import PdfSearch from '../pages/pdfSearch/PdfSearch';
 import PdfUpload from '../pages/pdfUpload/PdfUpload';
+import PDFViewer from '../pages/pdfViewer/PdfViewer';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: '/pdfUpload',
         element: <PdfUpload />,
+      },
+      {
+        path: '/pdfViewer',
+        element: <PDFViewer />,
       },
     ],
     errorElement: <div>404 Page not found.</div>,
